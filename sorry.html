@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Sorry Catie 😺</title>
+<style>
+  body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: linear-gradient(135deg, #ffe6f0, #ffcccc);
+    font-family: Arial, sans-serif;
+    overflow: hidden;
+  }
+
+  .card {
+    background: white;
+    padding: 30px;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    text-align: center;
+    width: 380px;
+    min-height: 400px;
+    position: relative;
+    z-index: 10;
+    transition: transform 0.8s, box-shadow 0.8s;
+  }
+
+  .card.party {
+    transform: scale(1.05);
+    box-shadow: 0 0 40px rgba(255,100,150,0.8);
+  }
+
+  h1 {
+    color: #ff3366;
+    margin-bottom: 20px;
+  }
+
+  button {
+    padding: 12px 22px;
+    font-size: 1em;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    margin: 8px;
+  }
+
+  #forgive {
+    background: #ff6666;
+    color: white;
+  }
+
+  #notForgive {
+    background: #ccc;
+  }
+
+  #catieImg {
+    width: 100%;
+    max-height: 300px;
+    object-fit: cover;
+    border-radius: 15px;
+    margin-bottom: 15px;
+    display: none;
+    transform: scale(1);
+    transition: transform 0.8s ease;
+  }
+
+  .message {
+    margin-top: 15px;
+    font-size: 1.1em;
+    color: #800000;
+    min-height: 70px;
+    white-space: pre-line;
+  }
+
+  /* Hearts */
+  .heart {
+    position: absolute;
+    width: 18px;
+    height: 18px;
+    background: red;
+    transform: rotate(45deg);
+    animation: floatUp 3s linear forwards;
+  }
+
+  .heart::before,
+  .heart::after {
+    content: "";
+    position: absolute;
+    width: 18px;
+    height: 18px;
+    background: inherit;
+    border-radius: 50%;
+  }
+
+  .heart::before { top: -9px; left: 0; }
+  .heart::after { left: 9px; top: 0; }
+
+  @keyframes floatUp {
+    from { opacity: 1; transform: translateY(0) rotate(45deg); }
+    to { opacity: 0; transform: translateY(-150px) rotate(45deg); }
+  }
+
+  /* Confetti */
+  .confetti {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    pointer-events: none;
+  }
+</style>
+</head>
+
+<body>
+<div class="card">
+  <h1>Sorry Catie 😺</h1>
+  <img id="catieImg" src="images/catie.jpg" alt="Catie">
+  <button id="forgive">Forgive ❤️</button>
+  <button id="notForgive">Never ❌</button>
+  <div class="message" id="message"></div>
+</div>
+
+<script>
+const forgive = document.getElementById('forgive');
+const notForgive = document.getElementById('notForgive');
+const messageEl = document.getElementById('message');
+const card = document.querySelector('.card');
+const img = document.getElementById('catieImg');
+
+// Move "Never ❌" button randomly
+notForgive.addEventListener('mouseenter', () => {
+  notForgive.style.position = 'absolute';
+  notForgive.style.left = Math.random() * (card.offsetWidth - notForgive.offsetWidth) + 'px';
+  notForgive.style.top = Math.random() * (card.offsetHeight - notForgive.offsetHeight - 50) + 'px';
+});
+
+// Typing effect
+function typeMessage(text) {
+  messageEl.innerHTML = "";
+  let i = 0;
+  const interval = setInterval(() => {
+    messageEl.innerHTML += text.charAt(i++);
+    if (i >= text.length) clearInterval(interval);
+  }, 40);
+}
+
+// Hearts
+function createHeart() {
+  const heart = document.createElement('div');
+  heart.className = 'heart';
+  heart.style.left = Math.random() * window.innerWidth + 'px';
+  heart.style.bottom = '0';
+  heart.style.background = `hsl(${Math.random()*360},70%,60%)`;
+  document.body.appendChild(heart);
+  setTimeout(() => heart.remove(), 3000);
+}
+
+// Confetti
+function createConfetti() {
+  const c = document.createElement('div');
+  c.className = 'confetti';
+  c.style.left = Math.random() * window.innerWidth + 'px';
+  c.style.top = '0';
+  c.style.background = `hsl(${Math.random()*360},100%,50%)`;
+  document.body.appendChild(c);
+
+  let y = 0;
+  const fall = setInterval(() => {
+    y += 6;
+    c.style.top = y + 'px';
+    c.style.transform = `rotate(${y*6}deg)`;
+    if (y > window.innerHeight) {
+      clearInterval(fall);
+      c.remove();
+    }
+  }, 20);
+}
+
+// Forgive click
+forgive.addEventListener('click', () => {
+  forgive.disabled = true;
+  notForgive.disabled = true;
+
+  // Show and zoom image
+  img.style.display = "block";
+  img.style.transform = "scale(0.8)";
+  setTimeout(() => img.style.transform = "scale(1.2)", 50);
+
+  card.classList.add('party');
+
+  typeMessage(
+  "Thank you for forgiving me 💖\n" +
+  "I really appreciate you taking the time to talk today.\n" +
+  "I’m sorry for the misunderstanding and for any hurt I caused.\n" +
+  "You mean a lot to me, and I’ll make sure to be better.\n" +
+  "I’m lucky to have you in my life ❤️"
+);
+
+  const hearts = setInterval(createHeart, 200);
+  const confetti = setInterval(createConfetti, 120);
+
+  setTimeout(() => {
+    clearInterval(hearts);
+    clearInterval(confetti);
+  }, 5000);
+});
+</script>
+</body>
+</html>
